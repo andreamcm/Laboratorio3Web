@@ -8,11 +8,28 @@
 const state = {
     //tab: ['ALL', 'COMPLETED', 'ACTIVE'],
     tab: 0,
-    completed: 0,
+    taskList: []
 };
+
+// Promises
+const promesa = fetch('https://raw.githubusercontent.com/samuelchvez/todos-fake-json-api/master/db.json');
+promesa
+    .then(resultado => resultado.json())
+    .then(resultadoJSON => {
+        for (let i = 0; i < resultadoJSON.length; i += 1){
+            state.taskList.push([resultadoJSON[i].title, resultadoJSON[i].isCompleted])
+        }
+        console.log(state.taskList)
+        render(state);
+    });
 
 // Se crea la función render 
 const render = listState => {
+
+    if(root.hasChildNodes()){
+        root.innerHTML = null;
+    }
+
     // Div de la barra principal
     const upperBar = document.createElement('div');
     upperBar.className = 'upperBar';
@@ -56,23 +73,26 @@ const render = listState => {
     task.className = 'task';
     tasksList.appendChild(task);*/
 
-    const task1 = document.createElement('button');
-    task1.className = 'task';
-    tasksList.appendChild(task1);
-
-    const task2 = document.createElement('button');
-    task2.className = 'task';
-    tasksList.appendChild(task2);
-
-    const task3 = document.createElement('button');
-    task3.className = 'task';
-    tasksList.appendChild(task3);
-
-
-    // Promises
-
-
     // Events
+    allBtn.onclick = () => {
+        state.tab = 0;
+        render(state);
+        console.log(state.tab);
+    }
+
+    completedBtn.onclick = () => {
+        state.tab = 1;
+        render(state);
+        console.log(state.tab);
+    }
+
+    activeBtn.onclick = () => {
+        state.tab = 2;
+        render(state);
+        console.log(state.tab);
+    }
+
+    // Agregar objetos (nuevas cosas)
     addBtn.onclick = () => {
         const task = document.createElement('button');
         task.className = 'task';
@@ -81,17 +101,38 @@ const render = listState => {
         tasksList.appendChild(task);
     }
 
-    allBtn.onclick = () => {
-
+    //Para agregar las actividades a la lista y ordenarlas segun se desee filtrar
+    if (state.tab == 0){
+        for(let i = 0; i < state.taskList.length; i += 1){
+            const task = document.createElement('button');
+            task.className = `task ${state.taskList[i][1]}`;
+            task.innerHTML = state.taskList[i][0];
+            tasksList.appendChild(task);
+        }
     }
 
-    completedBtn.onclick = () => {
-
+    if (state.tab == 1){
+        for(let i = 0; i < state.taskList.length; i += 1){
+            if (state.taskList[i][1] == true) {
+                const task = document.createElement('button');
+                task.className = `task ${state.taskList[i][1]}`;
+                task.innerHTML = state.taskList[i][0];
+                tasksList.appendChild(task);
+            }
+        }
     }
 
-    activeBtn.onclick = () => {
-
+    if (state.tab == 2){
+        for(let i = 0; i < state.taskList.length; i += 1){
+            if (state.taskList[i][1] == false) {
+                const task = document.createElement('button');
+                task.className = `task ${state.taskList[i][1]}`;
+                task.innerHTML = state.taskList[i][0];
+                tasksList.appendChild(task);
+            }
+        }
     }
+
 
     // A utilizar con promesas segun Samuel...PREGUNTAR
     /*const​​ solicitud​​=fetch​(​'https://raw.githubusercontent.com/samuelchvez/todos-fake-json-api/master/db.json'​);
@@ -107,3 +148,4 @@ const render = listState => {
 }
 
 render(state);
+render(render);

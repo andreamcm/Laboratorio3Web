@@ -120,8 +120,9 @@ h1 {
 
 .addBtn {
     height: 5rem;
-    width: 13.5rem;
+    width: 13rem;
     margin-top: 50rem;
+    margin-left: 0.5rem;
     border-radius: 1rem;
     background: lightgreen;
     font-family: Comfortaa;
